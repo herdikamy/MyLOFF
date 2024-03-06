@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "408542663117",
+    "firebase_url": "https://mypoc-a6ae2-default-rtdb.firebaseio.com",
+    "project_id": "mypoc-a6ae2",
+    "storage_bucket": "mypoc-a6ae2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408542663117:android:377365d64bd40a17c2b484",
+        "android_client_info": {
+          "package_name": "com.example.poc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAQfNTQiXnvgRvFt929EYmr9d1T6rO5aE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
