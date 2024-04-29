@@ -106,8 +106,8 @@ class SlideshowFragment : Fragment() {
     private fun createValueEventListener(editText: EditText): ValueEventListener {
         return object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val value = snapshot.getValue(String::class.java) ?: "0.0"
-                editText.setText(value)
+                val value = snapshot.getValue(Double::class.java) ?: 0.0
+                editText.setText(value.toString())
             }
 
             override fun onCancelled(error: DatabaseError) {

@@ -113,7 +113,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="Grafik pH terhadap DO"
+                            android:text="Grafik pH dan Valve terhadap waktu"
                             android:textColor="@color/grey"
                             android:textSize="15sp"
                             app:layout_constraintEnd_toEndOf="parent"

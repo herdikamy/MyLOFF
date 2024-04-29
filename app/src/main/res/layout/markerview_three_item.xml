@@ -75,4 +75,30 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
+<!--    <LinearLayout-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content">-->
+<!--        <TextView-->
+<!--            android:id="@+id/square3"-->
+<!--            android:layout_width="10dp"-->
+<!--            android:layout_height="10dp"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:background="@android:color/black"-->
+<!--            android:singleLine="true"-->
+<!--            android:layout_marginRight="2dp"-->
+<!--            android:textAppearance="?android:attr/textAppearanceSmall" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/item3"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:text="Valve"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:singleLine="true"-->
+<!--            android:textSize="10dp"-->
+<!--            android:textAppearance="?android:attr/textAppearanceSmall" />-->
+<!--    </LinearLayout>-->
+
 </LinearLayout>

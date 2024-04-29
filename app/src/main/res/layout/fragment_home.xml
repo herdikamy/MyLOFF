@@ -247,7 +247,7 @@
                                                                     android:id="@+id/valueHari"
                                                                     android:layout_width="wrap_content"
                                                                     android:layout_height="wrap_content"
-                                                                    android:text="7"
+                                                                    android:text="0"
                                                                     android:textSize="20sp"
                                                                     android:textStyle="bold"
                                                                     android:textColor="@color/grey"
@@ -306,6 +306,52 @@
                                                             android:layout_width="match_parent"
                                                             android:layout_height="wrap_content"
                                                             android:text="Grafik"
+                                                            android:textAlignment="center"
+                                                            android:textStyle="bold"
+                                                            android:textSize="20sp"
+                                                            android:textColor="@color/grey"/>
+                                                </LinearLayout>
+                                        </androidx.cardview.widget.CardView>
+
+                                        <androidx.cardview.widget.CardView
+                                            android:id="@+id/datacard"
+                                            android:layout_width="100dp"
+                                            android:layout_height="120dp"
+                                            android:layout_margin="10dp"
+                                            android:clickable="true"
+                                            android:onClick="openWebPage"
+                                            app:cardCornerRadius="10dp"
+                                            app:cardElevation="10dp"
+                                            app:cardBackgroundColor="@color/white">
+
+                                                <LinearLayout
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="match_parent"
+                                                    android:orientation="vertical">
+
+                                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                                            android:layout_width="60dp"
+                                                            android:layout_height="60dp"
+                                                            android:layout_gravity="center"
+                                                            android:layout_margin="15dp"
+                                                            android:background="@drawable/background_oval">
+
+                                                                <ImageView
+                                                                    android:id="@+id/imageView9"
+                                                                    android:layout_width="40dp"
+                                                                    android:layout_height="40dp"
+                                                                    app:layout_constraintBottom_toBottomOf="parent"
+                                                                    app:layout_constraintEnd_toEndOf="parent"
+                                                                    app:layout_constraintStart_toStartOf="parent"
+                                                                    app:layout_constraintTop_toTopOf="parent"
+                                                                    app:srcCompat="@drawable/database" />
+                                                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                                        <TextView
+                                                            android:id="@+id/textdata"
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="wrap_content"
+                                                            android:text="Data"
                                                             android:textAlignment="center"
                                                             android:textStyle="bold"
                                                             android:textSize="20sp"

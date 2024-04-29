@@ -36,6 +36,7 @@ class GalleryFragment : Fragment() {
 
     private var _binding: FragmentGalleryBinding? = null
     private lateinit var lineChart: LineChart
+    private lateinit var lineChart2: LineChart
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -55,6 +56,7 @@ class GalleryFragment : Fragment() {
 
         // Inisialisasi LineChart dari layout
         lineChart = binding.lineChart
+        lineChart2 = binding.lineChart2
 
         // Inisialisasi firestore
         val db = FirebaseFirestore.getInstance()
@@ -68,24 +70,24 @@ class GalleryFragment : Fragment() {
             val oksigenData = ArrayList<Entry>()
             val pHData = ArrayList<Entry>()
             val dateLabels = ArrayList<String>()
+            val statusValveData = ArrayList<Entry>()
 
             for (document in documents) {
                 val date = (document["tanggal_waktu"] as Timestamp)
-                val oksigenValue = (document["kadar_oksigen"] as String).toFloat()
-                val pHValue = (document["kandungan_ph"] as String).toFloat()
+                val oksigenValue = (document["kadar_oksigen"] as? Double)?.toFloat() ?: 0.0f
+                val pHValue = (document["kandungan_ph"] as? Double)?.toFloat()?: 0.0f
+                val statusValve = (document["status_valve"] as? String) ?: ""
 
-//                if (oksigenValue != null && pHValue != null && date != null) {
+                if (oksigenValue != 0.0f && pHValue != 0.0f && date != null) {
                     oksigenData.add(Entry(dateLabels.size.toFloat(), oksigenValue))
                     pHData.add(Entry(dateLabels.size.toFloat(), pHValue))
+                    statusValveData.add(Entry(dateLabels.size.toFloat(), getStatusValveValue(statusValve)))
                     dateLabels.add(getFormattedDate(date.toDate()))
-//                } else {
+                } else {
                     // Logging untuk melihat nilai yang tidak valid
                     Log.e("DataError", "Invalid data - date: $date, oksigen: $oksigenValue, pH: $pHValue")
-//                }
+                }
             }
-
-            // Reverse urutan data
-            dateLabels.reverse()
 
             val oksigenDataSet = LineDataSet(oksigenData, "Oksigen")
             oksigenDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
@@ -98,6 +100,12 @@ class GalleryFragment : Fragment() {
             pHDataSet.color = Color.RED
             pHDataSet.circleRadius = 5f
             pHDataSet.setCircleColor(Color.RED)
+
+            val statusValveDataSet = LineDataSet(statusValveData, "Status Valve")
+            statusValveDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
+            statusValveDataSet.color = Color.GREEN
+            statusValveDataSet.circleRadius = 5f
+            statusValveDataSet.setCircleColor(Color.GREEN)
 
             //Setup Legend
             val legend = lineChart.legend
@@ -124,6 +132,38 @@ class GalleryFragment : Fragment() {
 
             val marker: IMarker = LineChartMarkerView(requireContext(), lineChart, R.layout.markerview_three_item, XAxisDateFormatter(dateLabels))
             lineChart.marker = marker
+
+            // Atur sumbu X agar sesuai dengan urutan tanggal yang baru
+            xAxis.axisMaximum = dateLabels.size.toFloat() - 0.5f
+            xAxis.axisMinimum = 0f
+
+
+            //linechart2
+            //Setup Legend
+            val legend2 = lineChart2.legend
+            legend2.isEnabled = true
+            legend2.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP)
+            legend2.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER)
+            legend2.setOrientation(Legend.LegendOrientation.HORIZONTAL)
+            legend2.setDrawInside(false)
+
+            lineChart2.description.isEnabled = false
+            lineChart2.xAxis.position = XAxis.XAxisPosition.BOTTOM
+//            lineChart.data = LineData(oksigenDataSet, pHDataSet)
+            // Reverse urutan data setelah menambahkannya ke dalam LineData
+            val lineData2 = LineData(pHDataSet, statusValveDataSet)
+//            lineData.dataSets.forEach { dataSet ->
+//                (dataSet as LineDataSet).values.reverse()
+//            }
+            lineChart2.data = lineData2
+            lineChart2.animateXY(100, 500)
+
+            // Setelah menginisialisasi lineChart, terapkan formatter pada sumbu X
+            val xAxis2 = lineChart2.xAxis
+            xAxis2.valueFormatter = XAxisDateFormatter(dateLabels)
+
+            val marker2: IMarker = LineChartMarkerView2(requireContext(), lineChart2, R.layout.markerview_three_item, XAxisDateFormatter(dateLabels))
+            lineChart2.marker = marker2
 
             // Atur sumbu X agar sesuai dengan urutan tanggal yang baru
             xAxis.axisMaximum = dateLabels.size.toFloat() - 0.5f
@@ -199,6 +239,69 @@ class LineChartMarkerView(
     }
 }
 
+class LineChartMarkerView2(
+    context: Context?,
+    private val lineChart2: LineChart,
+    layoutResource: Int,
+    axisX: XAxisDateFormatter
+) : MarkerView(context, layoutResource), IMarker {
+
+    private val square1: TextView
+    private val square2: TextView
+    private val item1: TextView
+    private val item2: TextView
+
+    private val Title: TextView
+    private val XAxis: XAxisDateFormatter
+
+    init {
+        square1 = findViewById(R.id.square1)
+        square2 = findViewById(R.id.square2)
+        item1 = findViewById(R.id.item1)
+        item2 = findViewById(R.id.item2)
+        Title = findViewById(R.id.txtTitle)
+        XAxis = axisX
+    }
+
+    override fun refreshContent(e: Entry, highlight: Highlight) {
+        try {
+            Title.text = XAxis.getFormattedValue(e.x).toString()
+            square1.setBackgroundColor(lineChart2.data.getDataSetByIndex(0).color)
+            square2.setBackgroundColor(lineChart2.data.getDataSetByIndex(1).color)
+            val val1 =
+                lineChart2.data.getDataSetByIndex(0)
+                    .getEntryForXValue(e.x, Float.NaN, DataSet.Rounding.CLOSEST) as Entry
+            val val2 =
+                lineChart2.data.getDataSetByIndex(1)
+                    .getEntryForXValue(e.x, Float.NaN, DataSet.Rounding.CLOSEST) as Entry
+//            val val3 =
+//                lineChart.data.getDataSetByIndex(2)
+//                    .getEntryForXValue(e.x, Float.NaN, DataSet.Rounding.CLOSEST) as Entry
+            item1.text = String.format("%,.1f", val1.y)
+//            item2.text = String.format("%,.1f", val2.y)
+            item2.text = if (val2.y == 0.0f) {
+                "OFF"
+            } else if (val2.y == 1.0f) {
+                "ON"
+            } else {
+                String.format("%,.1f", val2.y)
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+        super.refreshContent(e, highlight)
+    }
+
+    private var mOffset: MPPointF? = null
+
+    override fun getOffset(): MPPointF {
+        if (mOffset == null) {
+            mOffset = MPPointF((-(width / 2)).toFloat(), (-height).toFloat())
+        }
+        return mOffset!!
+    }
+}
+
 //class XAxisDateFormatter(private val mValues: ArrayList<String>) :  ValueFormatter() {
 //    override fun getFormattedValue(value: Float): String {
 //        return if (value >= 0) {
@@ -225,4 +328,20 @@ class XAxisDateFormatter(private val dates: List<String>) : ValueFormatter() {
 private fun getFormattedDate(date: Date): String {
     val simpleDateFormat = SimpleDateFormat("dd-MMM", Locale.getDefault())
     return simpleDateFormat.format(date)
+}
+
+private fun getStatusValveValue(statusValve: String): Float {
+    return when (statusValve) {
+        "HIGH", "ON" -> 1.0f
+        "LOW", "OFF" -> 0.0f
+        else -> throw IllegalArgumentException("Status valve tidak valid: $statusValve")
+    }
+}
+
+private fun getStatusValveValue2(statusValve: String): String {
+    return when (statusValve) {
+        "HIGH", "ON" -> "0.0"
+        "LOW", "OFF" -> "0.0"
+        else -> throw IllegalArgumentException("Status valve tidak valid: $statusValve")
+    }
 }
